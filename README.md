@@ -177,6 +177,27 @@ Fetch the final state and execution log for a previously executed run.
 
 <img width="3193" height="1818" alt="image" src="https://github.com/user-attachments/assets/6295a54f-5aa4-4f15-83cd-3452828fbe21" />
 
+## Interactive Manual Client
+
+A manual client script `manual_client.py` is included to interactively test the WebSocket-based code review workflow.
+
+### Usage
+
+1.  **Ensure the server is running**:
+    ```bash
+    uvicorn app.main:app --reload
+    ```
+2.  **Run the client**:
+    ```bash
+    python manual_client.py
+    ```
+3.  **Follow the prompts**:
+    - Enter a quality threshold (default is 0.8).
+    - The client will create/monitor `input_code.py` in the current directory.
+    - Modify `input_code.py` in your editor.
+    - Press **Enter** in the client terminal to send the code for review.
+    - View the feedback (score, issues, suggestions) directly in the terminal.
+    - Repeat until the code is accepted (score >= threshold).
 <img width="2622" height="1871" alt="image" src="https://github.com/user-attachments/assets/0de24e93-c5ea-4ee6-938d-d3efc2a9d1cd" />
 
 <img width="2623" height="1897" alt="image" src="https://github.com/user-attachments/assets/ef35ba39-74ab-480a-bb3e-bb200cc07738" />
@@ -187,6 +208,7 @@ With more time, the following enhancements would be natural:
 
 - Persistent storage using SQLite or Postgres via SQLAlchemy.
 - Optional WebSocket endpoint to stream step-by-step execution logs.
-- A more expressive graph description language with additional validation.
-- Support for multiple different workflows (e.g., summarization, data quality).
+- A major enhancement would be to allow the system to iteratively improve the code using a Large Language Model (e.g., OpenAI, Llama, Gemini).
+  The workflow becomes:
+extract → complexity → issues → suggest → ai_improve_code → re-evaluate → loop
 - Richer quality score that uses different issue weights from `pylint`.
