@@ -200,6 +200,22 @@ def badFunction(x,y,z):
   - Loops between `issues` and `suggest` until `quality_score >= threshold` or a
     safety limit on iterations is reached.
 
+## Working
+<img width="3151" height="1834" alt="image" src="https://github.com/user-attachments/assets/7e752324-5f9b-4dbc-bed0-163a2f5ec273" />
+{
+  "graph_id": "code_review_default",
+  "state": {
+    "code": "BAL = 0\nOWNER = None\n\nclass Acct:\n    def __init__(self, name, bal=0):\n        global OWNER, BAL\n        OWNER = name\n        BAL = bal\n\n    def depo(self, amt):\n        global BAL\n        BAL = BAL + amt\n\n    def wd(self, amt):\n        global BAL\n        BAL = BAL - amt\n\n    def bal(self):\n        return BAL\n\n\ndef run():\n    a = Acct(\"Bob\", 100)\n    a.depo(200)\n    a.wd(50)\n    print(\"bal:\", a.bal())\n\n\nrun()\n",
+    "threshold": 0.8
+  }
+}
+
+<img width="3193" height="1818" alt="image" src="https://github.com/user-attachments/assets/6295a54f-5aa4-4f15-83cd-3452828fbe21" />
+
+<img width="2622" height="1871" alt="image" src="https://github.com/user-attachments/assets/0de24e93-c5ea-4ee6-938d-d3efc2a9d1cd" />
+
+<img width="2623" height="1897" alt="image" src="https://github.com/user-attachments/assets/ef35ba39-74ab-480a-bb3e-bb200cc07738" />
+
 ## Possible Improvements
 
 With more time, the following enhancements would be natural:
