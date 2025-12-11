@@ -93,10 +93,11 @@ For the default Code Review graph, send:
 {
   "graph_id": "code_review_default",
   "state": {
-    "code": "def add(a, b):\n    return a + b",
+    "code": "BAL = 0\nOWNER = None\n\nclass Acct:\n    def __init__(self, name, bal=0):\n        global OWNER, BAL\n        OWNER = name\n        BAL = bal\n\n    def depo(self, amt):\n        global BAL\n        BAL = BAL + amt\n\n    def wd(self, amt):\n        global BAL\n        BAL = BAL - amt\n\n    def bal(self):\n        return BAL\n\n\ndef run():\n    a = Acct(\"Bob\", 100)\n    a.depo(200)\n    a.wd(50)\n    print(\"bal:\", a.bal())\n\n\nrun()\n",
     "threshold": 0.8
   }
 }
+
 ```
 
 - `code` is the Python source to review.
@@ -105,19 +106,48 @@ For the default Code Review graph, send:
 **Response:**
 
 ```json
-{
-  "run_id": "uuid-here",
-  "graph_id": "code_review_default",
-  "finished": true,
-  "current_node": null,
-  "final_state": { ... },
-  "log": [
-    {
-      "node": "extract",
-      "timestamp": "...",
-      "state_snapshot": { ... }
-    },
-    ...
+      "node": "suggest",
+      "timestamp": "2025-12-11T00:48:24.780810+00:00",
+      "state_snapshot": {
+        "code": "BAL = 0\nOWNER = None\n\nclass Acct:\n    def __init__(self, name, bal=0):\n        global OWNER, BAL\n        OWNER = name\n        BAL = bal\n\n    def depo(self, amt):\n        global BAL\n        BAL = BAL + amt\n\n    def wd(self, amt):\n        global BAL\n        BAL = BAL - amt\n\n    def bal(self):\n        return BAL\n\n\ndef run():\n    a = Acct(\"Bob\", 100)\n    a.depo(200)\n    a.wd(50)\n    print(\"bal:\", a.bal())\n\n\nrun()\n",
+        "functions": [
+          "run",
+          "__init__",
+          "depo",
+          "wd",
+          "bal"
+        ],
+        "complexity": {
+          "run": 4,
+          "__init__": 3,
+          "depo": 2,
+          "wd": 2,
+          "bal": 1
+        },
+        "issues": [
+          {
+            "line": 6,
+            "message": "8: W0603: Using the global statement (global-statement)"
+          },
+          {
+            "line": 11,
+            "message": "8: W0603: Using the global statement (global-statement)"
+          },
+          {
+            "line": 15,
+            "message": "8: W0603: Using the global statement (global-statement)"
+          }
+        ],
+        "suggestions": [
+          "Resolve issue at line 6: 8: W0603: Using the global statement (global-statement)",
+          "Resolve issue at line 11: 8: W0603: Using the global statement (global-statement)",
+          "Resolve issue at line 15: 8: W0603: Using the global statement (global-statement)"
+        ],
+        "quality_score": 0.64,
+        "threshold": 0.8,
+        "iteration": 1
+      }
+    }
   ]
 }
 ```
@@ -126,64 +156,6 @@ For the default Code Review graph, send:
 
 Fetch the final state and execution log for a previously executed run.
 
-**Response:** Same shape as `POST /graph/run`.
-
-## Sample Code Snippets to Test
-
-### High-quality code
-
-```python
-def add(a: int, b: int) -> int:
-    """Return the sum of two integers."""
-    return a + b
-
-
-def is_even(n: int) -> bool:
-    """Check whether a number is even."""
-    return n % 2 == 0
-
-
-def average(numbers: list[int]) -> float:
-    """Calculate the average of a list of numbers."""
-    if not numbers:
-        return 0.0
-    return sum(numbers) / len(numbers)
-```
-
-### Poor-quality code
-
-```python
-def badFunction(x,y,z):
-    a=1
-    b=2
-    c=3
-    d=4
-    e=5
-    f=6
-    g=7
-    h=8
-    i=9
-    j=10
-
-    if x>0:
-        if y>0:
-            if z>0:
-                print("all positive")
-            else:
-                print("z negative")
-        else:
-            print("y negative")
-    else:
-        print("x negative")
-
-    for i in range(0,10):
-        for j in range(0,10):
-            if i==j:
-                print(i,j)
-
-    unused_variable = 999
-    return x+y+z
-```
 
 ## What the Engine Supports
 
@@ -202,13 +174,6 @@ def badFunction(x,y,z):
 
 ## Working
 <img width="3151" height="1834" alt="image" src="https://github.com/user-attachments/assets/7e752324-5f9b-4dbc-bed0-163a2f5ec273" />
-{
-  "graph_id": "code_review_default",
-  "state": {
-    "code": "BAL = 0\nOWNER = None\n\nclass Acct:\n    def __init__(self, name, bal=0):\n        global OWNER, BAL\n        OWNER = name\n        BAL = bal\n\n    def depo(self, amt):\n        global BAL\n        BAL = BAL + amt\n\n    def wd(self, amt):\n        global BAL\n        BAL = BAL - amt\n\n    def bal(self):\n        return BAL\n\n\ndef run():\n    a = Acct(\"Bob\", 100)\n    a.depo(200)\n    a.wd(50)\n    print(\"bal:\", a.bal())\n\n\nrun()\n",
-    "threshold": 0.8
-  }
-}
 
 <img width="3193" height="1818" alt="image" src="https://github.com/user-attachments/assets/6295a54f-5aa4-4f15-83cd-3452828fbe21" />
 
